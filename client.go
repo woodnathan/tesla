@@ -12,13 +12,13 @@ type TokenProviderFunc func() ( Token )
 
 // Required authorization credentials for the Tesla API
 type Auth struct {
-	GrantType    string `json:"grant_type"`
-	ClientID     string `json:"client_id"`
-	ClientSecret string `json:"client_secret"`
-	Email        string `json:"email"`
-	Password     string `json:"password"`
-	URL          string
-	StreamingURL string
+	GrantType     string `json:"grant_type"`
+	ClientID      string `json:"client_id"`
+	ClientSecret  string `json:"client_secret"`
+	Email         string `json:"email"`
+	Password      string `json:"password"`
+	URL           string
+	StreamingURL  string
 	TokenProvider TokenProviderFunc
 }
 
