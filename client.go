@@ -8,6 +8,8 @@ import (
 	"net/http"
 )
 
+type TokenProviderFunc func() ( Token )
+
 // Required authorization credentials for the Tesla API
 type Auth struct {
 	GrantType    string `json:"grant_type"`
@@ -17,6 +19,7 @@ type Auth struct {
 	Password     string `json:"password"`
 	URL          string
 	StreamingURL string
+	TokenProvider TokenProviderFunc
 }
 
 // The token and related elements returned after a successful auth
@@ -54,11 +57,16 @@ func NewClient(auth *Auth) (*Client, error) {
 		Auth: auth,
 		HTTP: &http.Client{},
 	}
-	token, err := client.authorize(auth)
-	if err != nil {
-		return nil, err
+	if auth.TokenProvider == nil {
+		token, err := client.authorize(auth)
+		if err != nil {
+			return nil, err
+		}
+		client.Token = token
+	} else {
+		token := auth.TokenProvider()
+		client.Token = &token
 	}
-	client.Token = token
 	ActiveClient = client
 	return client, nil
 }
