@@ -41,6 +41,9 @@ func (v Vehicle) Stream() (chan *StreamEvent, chan error, error) {
 	if err != nil {
 		return nil, nil, err
 	}
+	if resp.StatusCode != 200 {
+		return nil, nil, errors.New( "Failed to successfully connect to stream" )
+	}
 
 	eventChan := make(chan *StreamEvent)
 	errChan := make(chan error)
